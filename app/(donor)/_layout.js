@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
             </View>
 
             {/* Bottom Navigation Bar */}
-            <View style={{ height: 89, position: "relative"}}>
+            <View style={{ height: 89}}>
                 <BottomNav />
             </View>
         </View>

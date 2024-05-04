@@ -1,63 +1,39 @@
-import React, {  } from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Seva, BendyLinesBrown, EllipsisIcon, BackButton, Eye, EyeOff } from "../components/icons";
 import { router } from 'expo-router';
 
 export default function SignUp() {
+  const [error, setError] = useState({});
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
    
     return (
       <View style={styles.container}>
-          <TouchableOpacity style={{position: "absolute", paddingTop: 50, paddingLeft: 15, zIndex: 1}} onPress={()=> router.back()}>
+          <TouchableOpacity style={{position: "absolute", paddingTop: 50, paddingLeft: 15, zIndex: 0,}} onPress={()=> router.back()}>
             <BackButton/>
           </TouchableOpacity>
-        <View style={{position: "absolute", flexDirection: "row", width: "100%", justifyContent: 'space-between'}}>
+        <View style={{position: "absolute", flexDirection: "row", width: "100%", justifyContent: 'space-between', zIndex: -1}}>
           <EllipsisIcon height= {170}/>
             <BendyLinesBrown height={350} width={100}/>
         </View>
         
         <View style={{ justifyContent: "center", marginTop: 130}}>
           <Text 
-            style={{             
-              fontWeight: "600",
-              fontSize: 28,
-              textAlign: "center",
-              color: "white",}}
-          >
+            style={{ fontWeight: "600", fontSize: 28,
+              textAlign: "center", color: "white",}}>
             Sign Up
           </Text>
-          <Text 
-            style={{             
-              fontWeight: "400",
-              fontSize: 15,
-              color: "white",
-              textAlign: "center",
-              
-            }}
-          >
-            Please sign up to get started
-          </Text>
+          <Text style={{fontWeight: "400", fontSize: 15, color: "white", textAlign: "center"}}>
+            Please sign up to get started </Text>
         </View>
 
         <View style={[styles.modalBody, {paddingBottom: 30}]}>
-          <Text style= {{fontSize: 13, color: "#32343E",}}>
-            NAME
-          </Text>
-          <TextInput
-            style={[styles.textInput, {marginTop: 10}]}
-            placeholder="john doe"
-            
-          />
-          <Text style= {{fontSize: 13, color: "#32343E", marginTop: 20}}>
-            EMAIL
-          </Text>
-          <TextInput
-            style={[styles.textInput, {marginTop: 10}]}
-            placeholder="example@gmail.com"
-            
-          />
-          <Text style= {{fontSize: 13, color: "#32343E", marginTop: 20}}>
-            PASSWORD
-          </Text>
+          <Text style= {{fontSize: 13, color: "#32343E",}}>NAME</Text>
+          <TextInput style={[styles.textInput, {marginTop: 10}]} placeholder="john doe"/>
+          <Text style= {{fontSize: 13, color: "#32343E", marginTop: 20}}>EMAIL</Text>
+          <TextInput style={[styles.textInput, {marginTop: 10}]} placeholder="example@gmail.com"/>
+          <Text style= {{fontSize: 13, color: "#32343E", marginTop: 20}}>PASSWORD</Text>
           <View style={{position: "relative", }}>
             <TouchableOpacity activeOpacity={0.2} style= {{position: "absolute", zIndex: 1, right: 10, top: 37, height: 40, width: 30,}}>
               <Eye width= {18}/>
@@ -65,7 +41,6 @@ export default function SignUp() {
             <TextInput
               style={[styles.textInput, {marginTop: 10}]}
               placeholder='*********'
-              
               secureTextEntry
             />
           </View>
@@ -76,12 +51,9 @@ export default function SignUp() {
             <TouchableOpacity activeOpacity={0.2} style= {{position: "absolute", zIndex: 1, right: 10, top: 37, height: 40, width: 30,}}>
               <Eye width= {18}/>
             </TouchableOpacity>
-            <TextInput
-              style={[styles.textInput, {marginTop: 10}]}
+            <TextInput style={[styles.textInput, {marginTop: 10}]}
               placeholder='*********'
-              
-              secureTextEntry
-            />
+              secureTextEntry />
           </View>
           <TouchableOpacity onPress={()=> router.navigate('/choice')} activeOpacity={0.7} style={[styles.signUpButton, {marginTop: 35}]}>
             <Text
@@ -127,6 +99,9 @@ const styles = StyleSheet.create({
       color: "black",
       paddingLeft: 20,
       paddingRight: 35,
+    },
+    textInputError: {
+      borderColor: "#FF0000", 
     },
     signUpButton: {
       marginTop: 20,

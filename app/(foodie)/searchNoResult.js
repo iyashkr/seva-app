@@ -17,7 +17,7 @@ export default function SearchNoResult() {
         </View>
         
         <View style={{alignItems: "center"}}>
-          <TextInput style={[styles.textInput, {width: "100%", marginTop: 20, justifyContent: "center",}]} placeholder='Search Dishes' >
+          <TextInput autoFocus={true} style={[styles.textInput, {width: "100%", marginTop: 20, justifyContent: "center",}]} placeholder='Search Dishes' >
           </TextInput>
         </View>
         <View style={{flexDirection: "row", gap: 15, top: -43, left: 15}}>

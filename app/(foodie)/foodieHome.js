@@ -23,7 +23,7 @@ export default function FoodieHome() {
         </View>
         <Text style={{ marginTop: 30, fontSize: 16}}>Hey User<Text style={{fontWeight: 600}}>, Good Afternoon!</Text></Text>
         <View style={{alignItems: "center"}}>
-          <TouchableOpacity style={[styles.textInput, {width: "100%", marginTop: 20, justifyContent: "center",}]} onPress={()=> router.navigate('/search')} >
+          <TouchableOpacity style={[styles.textInput, {width: "100%", marginTop: 20, justifyContent: "center",}]} onPress={()=> router.navigate('/searchNoResult')} >
             <View style={{flexDirection: "row", gap: 15}}>
               <SearchIcon/>
               <Text>

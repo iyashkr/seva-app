@@ -55,43 +55,49 @@ export default function DonorDashboard(reward) {
             <Text style={{ fontSize: 14, fontWeight: 500, color: "#32343E", }}>Total 20 Reviews</Text>
           </View>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false} style={{ width: "100%", backgroundColor: "#FFFFFF", borderRadius: 15, padding: 15, marginTop: 25, position: "relative", marginBottom: 10}}>
+        <ScrollView showsVerticalScrollIndicator={false} style={{ width: "100%", backgroundColor: "#FFFFFF", borderRadius: 15, padding: 15, marginVertical: 15, position: "relative",}}>
           <View style={{ flexDirection: "row",  justifyContent: "space-between",}}>
             <Text style={{ fontSize: 14, fontWeight: 500, color: "#32343E", }}>Leaderboard</Text>
             <TouchableOpacity style={{flexDirection: "row", alignItems: "center"}}>
               <Text style={{ fontSize: 14, fontWeight: 500, color: "#FF7622", }}>View all</Text>
-
             </TouchableOpacity>
           </View>
           <View style={[styles.leaderboardRank, {backgroundColor: "#FFCA28"}]} >
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <LevelUp/>
             <Text style={{ fontSize: 18, fontWeight: 500, color: "#32343E", }}>1</Text>
             <Image source={require('../../assets/images/SampleFood.png')} style={{ height: 32, width: 32, borderRadius: 30, marginHorizontal: 15}}/>
             <Text style={{ fontSize: 18, fontWeight: 500, color: "#32343E", }}>Iman</Text>
-            <Text style={{ fontSize: 18, fontWeight: 500, color: "#312244", position: "absolute", right: 20}}>2019</Text>
+            </View>
+            <Text style={{ fontSize: 18, fontWeight: 500, color: "#312244"}}>2019</Text>
           </View>
           <View style={[styles.leaderboardRank, {backgroundColor: "#F4F4F4"}]} >
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <LevelDown/>
             <Text style={{ fontSize: 18, fontWeight: 500, color: "#32343E", }}>2</Text>
             <Image source={require('../../assets/images/SampleFood.png')} style={{ height: 32, width: 32, borderRadius: 30, marginHorizontal: 15}}/>
             <Text style={{ fontSize: 18, fontWeight: 500, color: "#32343E", }}>Vatani</Text>
-            <Text style={{ fontSize: 18, fontWeight: 500, color: "#312244", position: "absolute", right: 20}}>1932</Text>
+            </View>
+            <Text style={{ fontSize: 18, fontWeight: 500, color: "#312244"}}>1932</Text>
           </View>
           <View style={[styles.leaderboardRank, {backgroundColor: "#FF8228"}]} >
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <LevelDown/>
             <Text style={{ fontSize: 18, fontWeight: 500, color: "#32343E", }}>3</Text>
             <Image source={require('../../assets/images/SampleFood.png')} style={{ height: 32, width: 32, borderRadius: 30, marginHorizontal: 15}}/>
             <Text style={{ fontSize: 18, fontWeight: 500, color: "#32343E",}}>Jonathan</Text>
-            <Text style={{ fontSize: 18, fontWeight: 500, color: "#312244", position: "absolute", right: 20}}>1431</Text>
+            </View>
+            <Text style={{ fontSize: 18, fontWeight: 500, color: "#312244"}}>1431</Text>
           </View>
           <View style={[styles.leaderboardRank, {backgroundColor: "#F4F4F4"}]} >
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <LevelUp/>
             <Text style={{ fontSize: 18, fontWeight: 500, color: "#32343E", }}>4</Text>
             <Image source={require('../../assets/images/SampleFood.png')} style={{ height: 32, width: 32, borderRadius: 30, marginHorizontal: 15}}/>
             <Text style={{ fontSize: 18, fontWeight: 500, color: "#32343E", }}>Yash</Text>
-            <Text style={{ fontSize: 18, fontWeight: 500, color: "#312244", position: "absolute", right: 20}}>690</Text>
+            </View>
+            <Text style={{ fontSize: 18, fontWeight: 500, color: "#312244",}}>690</Text>
           </View>
-          
         </ScrollView>
       </View>
     )
@@ -144,8 +150,7 @@ const styles = StyleSheet.create({
       marginTop: 20,
       flexDirection: "row",
       alignItems: "center",
-      
-
+      justifyContent: "space-between"
     },
     foodImages: {
       borderRadius: 30

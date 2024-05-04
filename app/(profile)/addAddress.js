@@ -42,7 +42,7 @@ export default function AddAddress() {
     },[])
     return (
       <View style={styles.container}>
-        <View style={{flexDirection: "row", marginTop: 30, gap: 20, zIndex: 2}}>
+        <View style={{flexDirection: "row", marginTop: 15, gap: 20, alignItems: 'center', marginHorizontal: 15, marginBottom: 15}}>
           <TouchableOpacity activeOpacity={0.2} onPress={()=> router.back()}>
             <Back/>
           </TouchableOpacity>
@@ -51,9 +51,7 @@ export default function AddAddress() {
           </View>
         </View>
         <View>
-            <MapView style={styles.map} 
-                region={mapRegion}
-            >
+            <MapView style={styles.map} region={mapRegion}>
                 <Marker coordinate={mapRegion} title='Marker'/> 
                 <Marker coordinate={mapRegion2} title='Marker2'/> 
             </MapView>
@@ -69,17 +67,17 @@ export default function AddAddress() {
           <View style={{flexDirection: "row", justifyContent: "center", marginTop: 35}}>
             <View style={{flex: 1,}}>
               <Text style={{fontSize: 14, fontWeight: 400, color: "#32343E"}}>STREET</Text>
-              <TextInput placeholder='Quantity' style={[styles.textInput, {width: "90%", marginTop: 10, height: 47}]}/>
+              <TextInput placeholder='Street Name' style={[styles.textInput, {width: "90%", marginTop: 10, height: 47}]}/>
             </View>
             <View style={{flex: 1}}>
               <Text style={{fontSize: 14, fontWeight: 400, color: "#32343E"}}>POST CODE</Text>
-              <TextInput placeholder='Quantity' style={[styles.textInput, {width: "90%", marginTop: 10, height: 47}]}/>
+              <TextInput placeholder='Post code' style={[styles.textInput, {width: "90%", marginTop: 10, height: 47}]}/>
             </View>
           </View>
           <View style={{backgroundColor: "#FFFFFF", paddingVertical: 25}}>
             <View style={{marginTop: 15}}>
               <Text style={{fontSize: 14, fontWeight: 400, color: "#32343E"}}>APPARTMENT</Text>
-              <TextInput placeholder='Enter address' style={[styles.textInput, {width: "100%", marginTop: 10, height: 62}]}/>
+              <TextInput placeholder='Apartment name' style={[styles.textInput, {width: "100%", marginTop: 10, height: 62}]}/>
             </View>
           </View>
           <TouchableOpacity style={[styles.submitBtn, { bottom: 45 }]} onPress={userLocation}>

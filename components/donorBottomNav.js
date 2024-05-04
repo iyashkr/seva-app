@@ -33,7 +33,7 @@ export default function BottomNav({ route }) {
         if (tabIndex !== -1) {
             setActiveTab(tabIndex + 1);
         } else {
-            setActiveTab(0);
+            setActiveTab(1);
         }
     }, [route]);
 
@@ -82,13 +82,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 40,
-        borderTopWidth: 1,
+        borderWidth: 1,
         borderColor: "#706D6D2B",
         backgroundColor: "#FFFFFF",
         shadowColor: "#AFAFAF",
-        borderTopLeftRadius: 25,
-        borderTopRighttRadius: 25,
-
+        borderTopEndRadius: 25,
+        borderTopStartRadius: 25,
     },
     tab: {
         alignItems: 'center',

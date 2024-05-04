@@ -38,15 +38,15 @@ export default function OrderDetails() {
     );
 
     const [mapRegion, setMapRegion] = useState({
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0622,
-        longitudeDelta: 0.0321,
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0.0101,
+        longitudeDelta: 0.0101,
 
     });
     const [mapRegion2, setMapRegion2] = useState({
-        latitude: 31.277495676874434,
-        longitude: 75.67808593880449,
+        latitude: 31.256528663848965,
+        longitude: 75.70717780492313,
         latitudeDelta: 0.0622,
         longitudeDelta: 0.0321,
     });
@@ -83,8 +83,8 @@ export default function OrderDetails() {
             <MapView style={{height: "100%"}} 
                 region={mapRegion}
             >
-                <Marker coordinate={mapRegion} title='Marker'/> 
-                <Marker coordinate={mapRegion2} title='Marker2'/> 
+                <Marker coordinate={mapRegion} title='Your Location'/> 
+                <Marker coordinate={mapRegion2} title='Food Source' pinColor='#FF7622'/> 
             </MapView>
           </View>
           
@@ -158,7 +158,7 @@ export default function OrderDetails() {
             </View>
             
               
-            <TouchableOpacity style={[styles.submitBtn, {}]}>
+            <TouchableOpacity style={[styles.submitBtn, {}]} onPress={()=> router.navigate('/orderSuccess')}>
               <Text style={{color: "#FFFFFF", fontSize: 18, fontWeight: 500, }}>
                 PLACE ORDER
               </Text>

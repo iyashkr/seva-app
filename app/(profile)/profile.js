@@ -55,8 +55,7 @@ export default function Profile() {
             </View>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.7} onPress={()=> router.navigate('/login')}>
-          <View style={[styles.displayInfo, { marginTop: 28}]}>
+        <TouchableOpacity activeOpacity={0.7} onPress={()=> router.replace('/')} style={[styles.displayInfo, { marginTop: 28}]}>
             <View style={{flex: 1}}>
               <LogoutIcon/>
             </View>
@@ -66,7 +65,6 @@ export default function Profile() {
             <View style={{flex: 1, left: 28}}>
               <CaretRightIcon/>
             </View>
-          </View>
         </TouchableOpacity>
       </View>
     )
