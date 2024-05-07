@@ -41,9 +41,14 @@ import ProfileIcon from "../assets/images/icons/profileIcon.svg";
 import EditIcon from "../assets/images/icons/editIcon.svg";
 import Call from "../assets/images/icons/call.svg";
 import BlackBackBtn from "../assets/images/icons/blackBackBtn.svg";
+import FoodieLogo from "../assets/images/icons/foodieLogo.svg";
+import DonorLogo from "../assets/images/icons/donorLogo.svg";
+
 
 
 export {
+    FoodieLogo,
+    DonorLogo,
     EllipsisIcon,
     BendyLines,
     Seva,
@@ -87,5 +92,5 @@ export {
     EditIcon,
     Call,
     BlackBackBtn,
-    
+
 }

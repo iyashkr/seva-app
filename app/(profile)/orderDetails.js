@@ -1,18 +1,21 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Image, Linking, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Linking, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { BlackBackBtn, Delivery, Clock, Call } from "../../components/icons";
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import MapView, { Marker } from "react-native-maps";
 import * as location from 'expo-location';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import NavLayout from '../../components/NavLayout';
+import { doc, updateDoc } from 'firebase/firestore';
+import { FIREBASE_DB } from '../../firebaaseConfig';
 
 
 export default function OrderDetails() {
-
+  const params = useLocalSearchParams();
   const bottomSheetModalRef = useRef(null);
 
   useEffect(() => {
+    console.log(params)
     userLocation();
     // Open bottom sheet modal with minimum snap point at 25%
     handlePresentModalPress();
@@ -64,12 +67,16 @@ export default function OrderDetails() {
         latitude: locationData.coords.latitude,
         longitude: locationData.coords.longitude,
       }));
-      console.log(locationData.coords.latitude, locationData.coords.longitude);
     } else {
       console.log('Location permission denied');
     }
   }
 
+  async function raiseOrder() {
+    await updateDoc(doc(FIREBASE_DB, "orders", params.id), { status: "completed" }).then(res => {
+      router.replace('/orderSuccess')
+    }).catch(err => Alert.alert(err.message));
+  }
 
   return (
     <NavLayout>
@@ -109,14 +116,14 @@ export default function OrderDetails() {
             <View style={styles.containerModal}>
               {/* Item View */}
               <View style={{ flexDirection: "row", gap: 20, alignItems: 'center' }}>
-                <Image style={[styles.foodImages, {}]} source={require('../../assets/images/SampleFood.png')} />
+                <Image style={[styles.foodImages, {}]} source={{ uri: params?.images[0] }} />
                 <View style={{ gap: 3 }}>
-                  <Text style={{ color: '#181C2E', fontSize: 18, fontWeight: 500 }}>20kg Daal & 200 Roti</Text>
+                  <Text style={{ color: '#181C2E', fontSize: 18, fontWeight: 500 }}>{params?.title}</Text>
                   <Text style={{ color: "#A0A5BA", fontSize: 14 }}>500m From your location</Text>
                   <View style={{ flexDirection: "row", gap: 30, }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
                       <Delivery />
-                      <Text style={{ fontSize: 12 }}>Free</Text>
+                      <Text style={{ fontSize: 12 }}>{params?.price}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
                       <Clock />
@@ -157,12 +164,12 @@ export default function OrderDetails() {
                 <BottomSheetTextInput placeholder='Enter address' style={[styles.textInput, { width: "100%", marginTop: 10, height: 62, paddingLeft: 20 }]} />
                 <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
                   <Text style={{ fontSize: 14, fontWeight: 400, color: "#A0A5BA", marginTop: 20 }}>TOTAL:</Text>
-                  <Text style={{ fontSize: 20, fontWeight: 500, color: "#181C2E", marginTop: 20 }}>FREE</Text>
+                  <Text style={{ fontSize: 20, fontWeight: 500, color: "#181C2E", marginTop: 20 }}>{params?.price}</Text>
                 </View>
               </View>
 
 
-              <TouchableOpacity style={[styles.submitBtn, {}]} onPress={() => router.replace('/orderSuccess')}>
+              <TouchableOpacity style={[styles.submitBtn, {}]} onPress={() => raiseOrder()}>
                 <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: 500, }}>
                   PLACE ORDER
                 </Text>

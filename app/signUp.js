@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Seva, BendyLinesBrown, EllipsisIcon, BackButton, Eye, EyeOff } from "../components/icons";
 import { router } from 'expo-router';
-import { FIREBASE_AUTH } from '../firebaaseConfig';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../firebaaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 
 export default function SignUp() {
   const [error, setError] = useState({});
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -24,16 +26,39 @@ export default function SignUp() {
       setPasswordsMatch(false);
       return;
     }
+    signup()
     // Your sign-up logic here
-    router.navigate('/choice');
+    // router.navigate('/choice');
   };
 
   const signup = async () => {
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(user);
-      await AsyncStorage.setItem('role', 'admin');
-      router.replace('/choice');
+      const trimmedEmail = email.toLowerCase().trim();
+      const trimmedPass = password.trim();
+      const userQuery = query(collection(FIREBASE_DB, 'users'), where("email", "==", trimmedEmail))
+      const userSnapshot = await getDocs(userQuery);
+      const userDocs = userSnapshot.docs;
+      if (userDocs.length > 0) {
+        return Alert.alert("User already exist, please login");
+      }
+      const user = await createUserWithEmailAndPassword(auth, trimmedEmail, trimmedPass);
+      const userDocRef = doc(FIREBASE_DB, "users", user.user.uid);
+      const document = {
+        userId: user.user.uid,
+        role: null,
+        name: name.trim(),
+        email: email.toLowerCase().trim()
+      };
+      setDoc(userDocRef, document).then((res) => {
+        router.replace({
+          pathname: "/choice", params: {
+            uid: user.user.uid
+          }
+        });
+      }).catch((err) => {
+        console.log(err.message);
+      });
+
     }
     catch (error) {
       console.log(error);
@@ -65,9 +90,9 @@ export default function SignUp() {
 
       <View style={[styles.modalBody, { paddingBottom: 30 }]}>
         <Text style={{ fontSize: 13, color: "#32343E", }}>NAME</Text>
-        <TextInput style={[styles.textInput, { marginTop: 10 }]} placeholder="john doe" />
+        <TextInput onChangeText={(val) => setName(val)} style={[styles.textInput, { marginTop: 10 }]} placeholder="john doe" />
         <Text style={{ fontSize: 13, color: "#32343E", marginTop: 20 }}>EMAIL</Text>
-        <TextInput style={[styles.textInput, { marginTop: 10 }]} placeholder="example@gmail.com" />
+        <TextInput onChangeText={(val) => setEmail(val)} style={[styles.textInput, { marginTop: 10 }]} placeholder="example@gmail.com" />
         <Text style={{ fontSize: 13, color: "#32343E", marginTop: 20 }}>PASSWORD</Text>
         <View style={{ position: "relative", }}>
           <TouchableOpacity activeOpacity={0.2} style={{ position: "absolute", zIndex: 1, right: 10, top: 37, height: 40, width: 30, }}>
@@ -78,7 +103,7 @@ export default function SignUp() {
             placeholder='*********'
             secureTextEntry
             value={password}
-            onChangeText={setPassword}
+            onChangeText={val => setPassword(val)}
           />
         </View>
         <Text style={{ fontSize: 13, color: "#32343E", marginTop: 20 }}>
@@ -91,7 +116,7 @@ export default function SignUp() {
           <TextInput style={[styles.textInput, { marginTop: 10 }, !passwordsMatch && styles.errorBorder, !passwordsNotEmpty && styles.errorBorder,]}
             placeholder='*********'
             value={confirmPassword}
-            onChangeText={setConfirmPassword}
+            onChangeText={val => setConfirmPassword(val)}
             secureTextEntry />
         </View>
         {!passwordsMatch && <Text style={styles.textInputError}>Passwords do not match</Text>}

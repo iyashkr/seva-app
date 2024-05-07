@@ -1,11 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Back, More, ProfileIcon, LogoutIcon, MapIcon, CaretRightIcon } from "../../components/icons";
 import { router, useRouter } from 'expo-router';
 import { ScrollView } from 'react-native-web';
 import Address from '../../components/address';
+import { onAuthStateChanged } from 'firebase/auth';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../../firebaaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function Profile() {
+  const [profile, setProfile] = useState({});
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
+      if (user) {
+        const profileDoc = await getDoc(doc(FIREBASE_DB, "users", user.uid));
+        setProfile(profileDoc.data());
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -23,10 +38,10 @@ export default function Profile() {
         </TouchableOpacity>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", marginTop: 28 }}>
-        <Image source={require('../../assets/images/SampleFood.png')} style={{ backgroundColor: "#FFFFFF", height: 100, width: 100, borderRadius: 50, marginRight: 15 }} />
+        <Image source={{ uri: `https://ui-avatars.com/api/?name=${profile?.name}` }} style={{ backgroundColor: "#FFFFFF", height: 100, width: 100, borderRadius: 50, marginRight: 15 }} />
         <View>
           <Text style={{ fontSize: 20, fontWeight: 700, color: "#32343E" }}>
-            Vishal Khadka
+            {profile.name}
           </Text>
           <Text style={{ fontSize: 14, fontWeight: 400, color: "#A0A5BA" }}>
             I love fast food
@@ -43,7 +58,7 @@ export default function Profile() {
               FULL NAME
             </Text>
             <Text style={{ fontSize: 14, fontWeight: 400, color: "#6B6E82", }}>
-              Vishal Khadka
+              {profile?.name}
             </Text>
           </View>
 
@@ -59,7 +74,7 @@ export default function Profile() {
               EMAIL
             </Text>
             <Text style={{ fontSize: 14, fontWeight: 400, color: "#6B6E82", }}>
-              hello-thisis1@sample.com
+              {profile?.email}
             </Text>
           </View>
 

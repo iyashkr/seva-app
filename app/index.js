@@ -1,19 +1,95 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { Seva, BendyLines, EllipsisIcon, Eye, EyeOff } from "../components/icons";
 import { Checkbox } from 'expo-checkbox';
 import { router } from 'expo-router';
+import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../firebaaseConfig';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 
 export default function Login() {
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState({});
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
   };
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
+      if (user) {
+        const result = await getDoc(doc(FIREBASE_DB, "users", user.uid));
+        if (result.exists()) {
+          const userData = result.data();
+          if (!userData.role) {
+            return router.replace({
+              pathname: "/choice",
+              params: {
+                uid: userData.userId
+              }
+            });
+          }
+          if (userData.role === "foodie") {
+            return router.replace("/foodieHome");
+          }
+          if (userData.role === "donor") {
+            return router.replace("/donorDashboard");
+          }
+        }
+      } else {
+        setIsLoading(false);
+      }
+    });
 
+    return unsubscribe;
+  }, []);
+
+
+
+
+  const login = async () => {
+    try {
+      const trimmedEmail = email.toLowerCase().trim();
+      const trimmedPass = password.trim();
+      const userQuery = query(collection(FIREBASE_DB, 'users'), where("email", "==", trimmedEmail))
+      const userSnapshot = await getDocs(userQuery);
+      const userDocs = userSnapshot.docs;
+      if (userDocs.length === 0) {
+        return Alert.alert("User doesn't exist, please signup");
+      }
+      const userData = userDocs[0].data();
+      await signInWithEmailAndPassword(FIREBASE_AUTH, trimmedEmail, trimmedPass);
+      if (!userData.role) {
+        return router.replace({
+          pathname: "/choice", params: {
+            uid: userData.userId
+          }
+        });
+      }
+      if (userData.role === "foodie") {
+        return router.replace("/foodieHome");
+      }
+      if (userData.role === "donor") {
+        return router.replace("/donorDashboard");
+      }
+    }
+    catch (error) {
+      console.log(error.message);
+      Alert.alert('Sign Up failed: ' + error.message);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <View style={[styles.container, { flexDirection: "row", alignItems: "center", justifyContent: "center", backgroundColor: "white" }]}>
+        <ActivityIndicator size={"large"} color={"red"} />
+      </View>
+    )
+  }
   return (
     <View style={styles.container}>
       <View style={{ position: "absolute", flexDirection: "row", width: "100%", justifyContent: 'space-between' }}>
@@ -56,7 +132,7 @@ export default function Login() {
         <TextInput
           style={[styles.textInput, { marginTop: 10 }]}
           placeholder="example@gmail.com"
-
+          onChangeText={val => setEmail(val)}
         />
         <Text style={{ fontSize: 13, color: "#32343E", marginTop: 25 }}>
           PASSWORD
@@ -68,7 +144,7 @@ export default function Login() {
           <TextInput
             style={[styles.textInput, { marginTop: 10 }]}
             placeholder='*********'
-
+            onChangeText={val => setPassword(val)}
             secureTextEntry
           />
         </View>
@@ -81,7 +157,7 @@ export default function Login() {
             <Text style={{ color: "#FF7622", flex: 3 }}>Forgot Password </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity activeOpacity={0.7} style={styles.signUpButton} onPress={() => router.navigate('/choice')}>
+        <TouchableOpacity activeOpacity={0.7} style={styles.signUpButton} onPress={() => login()}>
           <Text
             style={{
               fontSize: 14,

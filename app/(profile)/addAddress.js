@@ -1,93 +1,78 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { Search, Back, Cross } from "../../components/icons";
-import { router } from 'expo-router';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Back, BlackBackBtn } from "../../components/icons";
+import { router } from 'expo-router'
 import MapView, { Marker } from "react-native-maps";
-import * as location from 'expo-location';
+import * as Location from 'expo-location';
 
 export default function AddAddress() {
 
-
   const [mapRegion, setMapRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0622,
-    longitudeDelta: 0.0321,
-
-  });
-  const [mapRegion2, setMapRegion2] = useState({
-    latitude: 31.277495676874434,
-    longitude: 75.67808593880449,
+    latitude: null,
+    longitude: null,
     latitudeDelta: 0.0622,
     longitudeDelta: 0.0321,
   });
 
-  const userLocation = async () => {
-    let { status } = await location.requestForegroundPermissionsAsync({ enableHighAccuracy: true });
-    if (status === 'granted') {
-      let locationData = await location.getCurrentPositionAsync({});
-      setMapRegion(prevRegion => ({
-        ...prevRegion,
-        latitude: locationData.coords.latitude,
-        longitude: locationData.coords.longitude,
-      }));
-      console.log(locationData.coords.latitude, locationData.coords.longitude);
-    } else {
+  const getUserLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
       console.log('Location permission denied');
+      return;
     }
-  }
+
+    let location = await Location.getCurrentPositionAsync({});
+    setMapRegion({
+      ...mapRegion,
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    });
+  };
 
   useEffect(() => {
-    userLocation();
-  }, [])
-  return (
-    <View style={styles.container}>
-      <View style={{ flexDirection: "row", marginTop: 15, gap: 20, alignItems: 'center', marginHorizontal: 15, marginBottom: 15 }}>
-        <TouchableOpacity activeOpacity={0.2} onPress={() => router.back()}>
-          <Back />
-        </TouchableOpacity>
-        <View style={{ justifyContent: "center", }}>
-          <Text style={{ fontSize: 20, color: "#181C2E" }}>Order Details</Text>
-        </View>
-      </View>
-      <View>
-        <MapView style={styles.map} region={mapRegion}>
-          <Marker coordinate={mapRegion} title='Marker' />
-          <Marker coordinate={mapRegion2} title='Marker2' />
-        </MapView>
+    getUserLocation();
+  }, []);
 
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <TouchableOpacity style={{ marginHorizontal: 20, top: 25, zIndex: 2 }} activeOpacity={0.2} onPress={() => router.back()}>
+        <BlackBackBtn />
+      </TouchableOpacity>
+      <View style={{ marginTop: -45 }}>
+        <MapView style={styles.map} region={mapRegion}>
+          {mapRegion.latitude && mapRegion.longitude && (
+            <Marker coordinate={{ latitude: mapRegion.latitude, longitude: mapRegion.longitude }} title='Your Location' />
+          )}
+        </MapView>
       </View>
-      <View style={{ paddingHorizontal: 25, bottom: 190 }}>
-        <View style={{ backgroundColor: "#FFFFFF", }}>
-          <View style={{ marginTop: 15 }}>
-            <Text style={{ fontSize: 14, fontWeight: 400, color: "#32343E" }}>ADDRESS</Text>
-            <TextInput placeholder='Enter address' style={[styles.textInput, { width: "100%", marginTop: 10, height: 62 }]} />
-          </View>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 35 }}>
+
+      {/* Form */}
+      <View style={{ paddingHorizontal: 25, marginTop: 40 }}>
+        <>
+          <Text style={{ fontSize: 14, fontWeight: 400, color: "#32343E" }}>ADDRESS</Text>
+          <TextInput placeholder='Enter address' style={[styles.textInput, { marginTop: 10, height: 62 }]} />
+        </>
+        <View style={{ flexDirection: "row", justifyContent: "center", marginVertical: 30, gap: 20 }}>
           <View style={{ flex: 1, }}>
             <Text style={{ fontSize: 14, fontWeight: 400, color: "#32343E" }}>STREET</Text>
-            <TextInput placeholder='Street Name' style={[styles.textInput, { width: "90%", marginTop: 10, height: 47 }]} />
+            <TextInput placeholder='Street Name' style={[styles.textInput, { marginTop: 10, height: 47 }]} />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 14, fontWeight: 400, color: "#32343E" }}>POST CODE</Text>
-            <TextInput placeholder='Post code' style={[styles.textInput, { width: "90%", marginTop: 10, height: 47 }]} />
+            <TextInput placeholder='Post code' style={[styles.textInput, { marginTop: 10, height: 47 }]} />
           </View>
         </View>
-        <View style={{ backgroundColor: "#FFFFFF", paddingVertical: 25 }}>
-          <View style={{ marginTop: 15 }}>
-            <Text style={{ fontSize: 14, fontWeight: 400, color: "#32343E" }}>APPARTMENT</Text>
-            <TextInput placeholder='Apartment name' style={[styles.textInput, { width: "100%", marginTop: 10, height: 62 }]} />
-          </View>
-        </View>
-        <TouchableOpacity style={[styles.submitBtn, { bottom: 45 }]} onPress={userLocation}>
-          <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: 500, }}>
-            LOCATE
+        <>
+          <Text style={{ fontSize: 14, fontWeight: 400, color: "#32343E" }}>APPARTMENT</Text>
+          <TextInput placeholder='Apartment name' style={[styles.textInput, { marginTop: 10, height: 62 }]} />
+        </>
+        <TouchableOpacity style={styles.submitBtn}>
+          <Text style={{ color: "#FFFFFF", fontSize: 16, fontWeight: 500, }}>
+            SAVE LOCATION
           </Text>
         </TouchableOpacity>
       </View>
-
-    </View>
+    </ScrollView>
   )
 }
 
@@ -97,71 +82,24 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#FFFFFF",
   },
-  modalBody: {
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
-    left: 0,
-    backgroundColor: "white",
-    paddingHorizontal: 32,
-    paddingTop: 20,
-    paddingBottom: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
   textInput: {
-    borderWidth: 1,
     backgroundColor: "#F6F6F6",
-    borderColor: "#F6F6F6",
     height: 70,
     borderRadius: 10,
-    position: "relative",
-    color: "#676767",
-    paddingLeft: 20,
-    paddingRight: 35,
-  },
-  signUpButton: {
-    marginTop: 20,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 70,
-    backgroundColor: "#FF7622",
-    borderRadius: 15,
-  },
-  topBarBtn: {
-    borderWidth: 2,
-    borderColor: "#EDEDED",
-    paddingHorizontal: 15,
-    height: 41,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  foodImages: {
-    width: 62,
-    height: 55,
-    borderRadius: 10
-  },
-  image: {
-    height: 209,
-    width: 216,
-
+    color: "#383838",
+    paddingHorizontal: 20,
   },
   map: {
     width: '100%',
-    height: '60%',
+    height: 295,
   },
   submitBtn: {
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FF7622",
     height: 62,
-    borderRadius: 10,
-    marginTop: 45,
+    borderRadius: 18,
+    marginTop: 30,
     width: "100%",
-    bottom: 35,
-    alignSelf: "center"
   },
-
 })
