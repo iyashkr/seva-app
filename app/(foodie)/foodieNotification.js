@@ -29,12 +29,9 @@ export default function FoodieNotification() {
               <Text style={{ fontSize: 10, color: "#9C9BA6" }}>{/*notification?.time*/} 20 min ago</Text>
             </View>
             <Image source={require('../../assets/images/SampleFood.png')} style={{ height: 55, width: 55, borderRadius: 10, flex: 1 }} />
-
           </View>
-
         ))}
       </ScrollView>
-
     </View>
   )
 }

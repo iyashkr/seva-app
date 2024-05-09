@@ -46,14 +46,13 @@ export default function DonorDashboard() {
         <TouchableOpacity activeOpacity={0.2} >
           <Menu />
         </TouchableOpacity>
-        <View style={{}}>
+        <TouchableOpacity style={{}}>
           <Text style={{ fontSize: 12, color: "#FC6E2A" }}>LOCATION</Text>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
             <Text style={{ fontSize: 14, color: "#676767" }}>Lawgate, LPU</Text>
             <DropdownPolygon />
-
           </View>
-        </View>
+        </TouchableOpacity>
         <Image source={require('../../assets/images/SampleFood.png')} style={{ backgroundColor: "#FFFFFF", height: 45, width: 45, borderRadius: 30, left: 130 }} />
       </View>
       <View style={{ flexDirection: "row", marginTop: 24, justifyContent: "space-between" }}>
