@@ -7,7 +7,7 @@ export default function BottomNav({ route }) {
     const [activeTab, setActiveTab] = useState(1); // Set the initial active tab
     const tabs = [
         {
-            tab: "/donorDashboard",
+            tab: "/foodieHome",
             id: 1
         },
         {

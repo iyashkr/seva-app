@@ -16,6 +16,7 @@ export default function AddItems() {
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
   const [details, setDetails] = useState("");
+  const [address, setAddress] = useState("");
   const [errors, setErrors] = useState({});
   const [uid, setUid] = useState('');
 
@@ -71,6 +72,9 @@ export default function AddItems() {
       if (!quantity.trim()) {
         newErrors.quantity = "Please add quantity"
       }
+      if (!address.trim()) {
+        newErrors.quantity = "Please add address"
+      }
       if (!price.trim()) {
         newErrors.price = "Please add price"
       }
@@ -90,6 +94,7 @@ export default function AddItems() {
         title,
         price,
         quantity,
+        address,
         details,
         uid,
         dateAdded: Date.now(),
@@ -176,15 +181,13 @@ export default function AddItems() {
           </View>
           <TextInput onChangeText={(val) => setQuantity(val)} placeholder='e.g. 20 kg, 2litres' style={[styles.textInput, { height: 45 }]}></TextInput>
         </View>
-        {/* <TouchableOpacity style={{ width: "43%" }}>
-          <View style={{ marginTop: 15, alignItems: "centre", gap: 3, flexDirection: "row", }}>
-            <Plus />
-            <Text style={{ fontSize: 13, color: "#FF7622", paddingBottom: 10 }}>ADD MORE QUANTITY</Text>
-          </View>
-        </TouchableOpacity> */}
+        <View style={{ marginTop: 10 }}>
+          <Text style={{ fontSize: 13, color: "#32343E", paddingBottom: 10 }}>ADDRESS</Text>
+          <TextInput onChangeText={text => setDetails(text)} multiline={true} style={[styles.textInput, { height: 60, }]}></TextInput>
+        </View>
         <View style={{ marginTop: 10 }}>
           <Text style={{ fontSize: 13, color: "#32343E", paddingBottom: 10 }}>DETAILS</Text>
-          <TextInput onChangeText={text => setDetails(text)} multiline={true} style={[styles.textInput, { height: 110, }]}></TextInput>
+          <TextInput onChangeText={text => setDetails(text)} multiline={true} style={[styles.textInput, { height: 85, }]}></TextInput>
         </View>
         <View style={{ marginTop: 15 }}>
           <Text style={{ fontSize: 13, color: "#32343E", paddingBottom: 10 }}>PRICE</Text>

@@ -6,18 +6,25 @@ import MapView, { Marker } from "react-native-maps";
 import * as location from 'expo-location';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import NavLayout from '../../components/NavLayout';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../firebaaseConfig';
 
 
 export default function OrderDetails() {
   const params = useLocalSearchParams();
+  const [data, setData] = useState({});
+  const [user, setUser] = useState({});
   const bottomSheetModalRef = useRef(null);
 
   useEffect(() => {
-    console.log(params)
+    async function getFood() {
+      const document = await getDoc(doc(FIREBASE_DB, "orders", params.id));
+      const userDoc = await getDoc(doc(FIREBASE_DB, "users", document.data().uid));
+      setUser(userDoc.data());
+      setData({ ...document.data(), id: document.id });
+    }
+    getFood()
     userLocation();
-    // Open bottom sheet modal with minimum snap point at 25%
     handlePresentModalPress();
   }, []);
 
@@ -73,11 +80,19 @@ export default function OrderDetails() {
   }
 
   async function raiseOrder() {
-    await updateDoc(doc(FIREBASE_DB, "orders", params.id), { status: "completed" }).then(res => {
+    await updateDoc(doc(FIREBASE_DB, "orders", data?.id), { status: "completed" }).then(res => {
       router.replace('/orderSuccess')
     }).catch(err => Alert.alert(err.message));
   }
 
+  var getInitials = function (string) {
+    var initials = "";
+    var names = string.split(' ');
+    for (n = 0; n < names.length; n++) {
+      initials += names[n].substring(0, 1).toUpperCase();
+    }
+    return initials;
+  };
   return (
     <NavLayout>
       <BottomSheetModalProvider>
@@ -114,16 +129,15 @@ export default function OrderDetails() {
 
           >
             <View style={styles.containerModal}>
-              {/* Item View */}
               <View style={{ flexDirection: "row", gap: 20, alignItems: 'center' }}>
-                <Image style={[styles.foodImages, {}]} source={{ uri: params?.images[0] }} />
+                {data?.images?.length > 0 && <Image style={styles.foodImages} source={{ uri: data?.images[0] }} />}
                 <View style={{ gap: 3 }}>
-                  <Text style={{ color: '#181C2E', fontSize: 18, fontWeight: 500 }}>{params?.title}</Text>
+                  <Text style={{ color: '#181C2E', fontSize: 18, fontWeight: 500 }}>{data?.title}</Text>
                   <Text style={{ color: "#A0A5BA", fontSize: 14 }}>500m From your location</Text>
                   <View style={{ flexDirection: "row", gap: 30, }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
                       <Delivery />
-                      <Text style={{ fontSize: 12 }}>{params?.price}</Text>
+                      <Text style={{ fontSize: 12 }}>{data?.price}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
                       <Clock />
@@ -135,20 +149,22 @@ export default function OrderDetails() {
 
               <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 30, gap: 20 }}>
                 <View style={{ flex: 1, }}>
-                  <Text style={{ fontSize: 14, fontWeight: 500, color: "#A0A5BA" }}>DAAL</Text>
+                  <Text style={{ fontSize: 14, fontWeight: 500, color: "#A0A5BA" }}>ITEM</Text>
                   <BottomSheetTextInput placeholder='Quantity' style={[styles.textInput, { width: "100%", marginTop: 10, height: 47, paddingLeft: 20 }]} />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 14, fontWeight: 500, color: "#A0A5BA" }}>ROTI</Text>
+                  <Text style={{ fontSize: 14, fontWeight: 500, color: "#A0A5BA" }}>QUANTITY</Text>
                   <BottomSheetTextInput placeholder='Quantity' style={[styles.textInput, { width: "100%", marginTop: 10, height: 47, paddingLeft: 20 }]} />
                 </View>
               </View>
 
               <View style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
-                <Image source={require('../../assets/images/SampleFood.png')} style={{ backgroundColor: "#FFFFFF", height: 54, width: 54, borderRadius: 100, marginRight: 15, }} />
+                <View style={{ backgroundColor: "black", height: 54, width: 54, borderRadius: 50, marginRight: 15, flexDirection: "row", alignItems: "center", justifyContent: "center" }} >
+                  {user?.name && <Text style={{ color: "white", fontSize: 24 }}> {getInitials(user?.name)} </Text>}
+                </View>
                 <View style={{ flex: 3 }}>
                   <Text style={{ fontSize: 20, fontWeight: 700, color: "#32343E", }}>
-                    Vishal Khadka
+                    {user?.name}
                   </Text>
                   <Text style={{ fontSize: 14, fontWeight: 400, color: "#A0A5BA" }}>
                     Donor
@@ -164,7 +180,7 @@ export default function OrderDetails() {
                 <BottomSheetTextInput placeholder='Enter address' style={[styles.textInput, { width: "100%", marginTop: 10, height: 62, paddingLeft: 20 }]} />
                 <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
                   <Text style={{ fontSize: 14, fontWeight: 400, color: "#A0A5BA", marginTop: 20 }}>TOTAL:</Text>
-                  <Text style={{ fontSize: 20, fontWeight: 500, color: "#181C2E", marginTop: 20 }}>{params?.price}</Text>
+                  <Text style={{ fontSize: 20, fontWeight: 500, color: "#181C2E", marginTop: 20 }}>{data?.price}</Text>
                 </View>
               </View>
 

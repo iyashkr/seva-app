@@ -4,6 +4,7 @@ import { Delivery, Clock } from './icons'
 
 export default function FoodItemData({ food }) {
 
+
   return (
     <View style={{ marginTop: 15, marginBottom: 5 }}>
       <View style={{ flexDirection: "row", gap: 12 }}>

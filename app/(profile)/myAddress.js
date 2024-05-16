@@ -4,11 +4,13 @@ import { Menu, BackButton, Back, AddImage, Plus, Pencil } from "../../components
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native';
 import Address from '../../components/address';
+import { StatusBar } from 'expo-status-bar';
 
 export default function MyAddress() {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="dark" />
       <View style={{ flexDirection: "row", marginTop: 30, gap: 20, alignItems: 'center' }}>
         <TouchableOpacity activeOpacity={0.2} onPress={() => router.back()}>
           <Back />

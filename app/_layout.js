@@ -7,8 +7,8 @@ import { StatusBar } from 'expo-status-bar';
 const Layout = ({ children }) => {
     return (
         <>
-            <StatusBar style="dark" />
             <SafeAreaView style={styles.container}>
+                <StatusBar style="dark" />
                 <Slot />
             </SafeAreaView>
         </>

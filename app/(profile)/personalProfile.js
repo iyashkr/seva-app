@@ -7,6 +7,7 @@ import Address from '../../components/address';
 import { onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../firebaaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Profile() {
   const [profile, setProfile] = useState({});
@@ -22,8 +23,18 @@ export default function Profile() {
     return unsubscribe;
   }, []);
 
+  var getInitials = function (string) {
+    var initials = "";
+    var names = string.split(' ');
+    for (n = 0; n < names.length; n++) {
+      initials += names[n].substring(0, 1).toUpperCase();
+    }
+    return initials;
+  };
+
   return (
     <View style={styles.container}>
+      <StatusBar style="dark" />
       <View style={{ flexDirection: "row", marginTop: 30, gap: 20, alignItems: "center", justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
           <TouchableOpacity activeOpacity={0.2} onPress={() => router.back()}>
@@ -38,7 +49,9 @@ export default function Profile() {
         </TouchableOpacity>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", marginTop: 28 }}>
-        <Image source={{ uri: `https://ui-avatars.com/api/?name=${profile?.name}` }} style={{ backgroundColor: "#FFFFFF", height: 100, width: 100, borderRadius: 50, marginRight: 15 }} />
+        <View style={{ backgroundColor: "black", height: 100, width: 100, borderRadius: 50, marginRight: 15, flexDirection: "row", alignItems: "center", justifyContent: "center" }} >
+          {profile?.name && <Text style={{ color: "white", fontSize: 32 }}> {getInitials(profile?.name)} </Text>}
+        </View>
         <View>
           <Text style={{ fontSize: 20, fontWeight: 700, color: "#32343E" }}>
             {profile.name}
@@ -61,7 +74,6 @@ export default function Profile() {
               {profile?.name}
             </Text>
           </View>
-
         </View>
       </TouchableOpacity>
       <TouchableOpacity activeOpacity={0.7} >
@@ -87,15 +99,15 @@ export default function Profile() {
             <LogoutIcon />
           </View>
           <View style={{ flex: 5, gap: 4 }}>
+
             <Text style={{ fontSize: 14, fontWeight: 400, color: "#32343E", }}>
               PHONE NUMBER
             </Text>
             <Text style={{ fontSize: 14, fontWeight: 400, color: "#6B6E82", }}>
               910-238-4567
             </Text>
+
           </View>
-
-
         </View>
       </TouchableOpacity>
     </View>

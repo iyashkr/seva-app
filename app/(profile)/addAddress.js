@@ -4,6 +4,7 @@ import { Back, BlackBackBtn } from "../../components/icons";
 import { router } from 'expo-router'
 import MapView, { Marker } from "react-native-maps";
 import * as Location from 'expo-location';
+import { StatusBar } from 'expo-status-bar';
 
 export default function AddAddress() {
 
@@ -42,6 +43,7 @@ export default function AddAddress() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <StatusBar style="dark" />
       <TouchableOpacity style={{ marginHorizontal: 20, top: 25, zIndex: 2 }} activeOpacity={0.2} onPress={() => router.back()}>
         <BlackBackBtn />
       </TouchableOpacity>

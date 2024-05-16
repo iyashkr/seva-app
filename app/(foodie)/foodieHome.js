@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import FoodItemData from '../../components/foodItemData';
 import { collection, getDocs } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../firebaaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function FoodieHome() {
   const [foods, setFoods] = useState([]);
@@ -63,7 +64,9 @@ export default function FoodieHome() {
       <ScrollView showsVerticalScrollIndicator={false}>
 
         {foods.map((food, index) => (
-          <TouchableOpacity key={index} onPress={() => router.navigate({ params: food, pathname: '/orderDetails' })}>
+          <TouchableOpacity key={index} onPress={async () => {
+            router.navigate({ params: { id: food.id }, pathname: '/orderDetails' })
+          }}>
             <FoodItemData food={food} />
           </TouchableOpacity>
         ))}
@@ -72,7 +75,7 @@ export default function FoodieHome() {
             <Text style={{ textAlign: "center" }}>Current no food are available</Text>
           </View>}
       </ScrollView>
-    </View>
+    </View >
   )
 }
 

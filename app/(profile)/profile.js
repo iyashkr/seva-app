@@ -7,6 +7,7 @@ import Address from '../../components/address';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../firebaaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Profile() {
 
@@ -29,8 +30,18 @@ export default function Profile() {
     }).catch(err => Alert.alert(err.message))
   }
 
+  var getInitials = function (string) {
+    var initials = "";
+    var names = string.split(' ');
+    for (n = 0; n < names.length; n++) {
+      initials += names[n].substring(0, 1).toUpperCase();
+    }
+    return initials;
+  };
   return (
     <View style={styles.container}>
+
+      <StatusBar style="dark" />
       <View style={{ flexDirection: "row", marginTop: 30, gap: 20, alignItems: "center", }}>
         <TouchableOpacity activeOpacity={0.7} onPress={() => router.back()}>
           <Back />
@@ -41,7 +52,9 @@ export default function Profile() {
         </TouchableOpacity>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", marginTop: 28 }}>
-        <Image source={{ uri: `https://ui-avatars.com/api/?name=${profile?.name}` }} style={{ height: 100, width: 100, borderRadius: 50, marginRight: 15 }} />
+        <View style={{ backgroundColor: "black", height: 100, width: 100, borderRadius: 50, marginRight: 15, flexDirection: "row", alignItems: "center", justifyContent: "center" }} >
+          {profile?.name && <Text style={{ color: "white", fontSize: 32 }}> {getInitials(profile?.name)} </Text>}
+        </View>
         <View>
           <Text style={{ fontSize: 20, fontWeight: 700, color: "#32343E" }}>
             {profile?.name}
